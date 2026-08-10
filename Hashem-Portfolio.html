@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hashem Zaid // Computer Science</title>
+  <meta name="description" content="Portfolio of Hashem, a Computer Science student focused on software engineering and hardware testing." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { base: "#0d0d11", panel: "#12121a" },
+          fontFamily: {
+            mono: ['"JetBrains Mono"', "monospace"],
+            sans: ['"Inter"', "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --cyan: #00f0ff;
+      --violet: #8b3dff;
+      --base: #0d0d11;
+    }
+
+    html, body { overflow-x: hidden; }
+
+    body {
+      background-color: var(--base);
+      cursor: none;
+    }
+
+    /* ---------- layered backdrops ---------- */
+    #matrix, #grid-floor, #vignette, #scanlines, #glow-cursor {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #matrix { opacity: 0.18; }
+
+    /* perspective grid horizon */
+    #grid-floor {
+      top: auto;
+      bottom: 0;
+      height: 45vh;
+      background-image:
+        linear-gradient(rgba(0, 240, 255, 0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 61, 255, 0.14) 1px, transparent 1px);
+      background-size: 44px 44px;
+      transform: perspective(340px) rotateX(74deg);
+      transform-origin: bottom center;
+      mask-image: linear-gradient(to top, #000 0%, transparent 90%);
+      -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 90%);
+      animation: floor-scroll 6s linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes floor-scroll {
+      from { background-position: 0 0; }
+      to { background-position: 0 44px; }
+    }
+
+    #vignette {
+      background: radial-gradient(ellipse at 50% 0%, transparent 40%, rgba(0,0,0,0.55) 100%);
+    }
+
+    /* CRT scanlines + flicker */
+    #scanlines {
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 2px,
+        rgba(0, 0, 0, 0.25) 3px,
+        rgba(0, 0, 0, 0) 4px
+      );
+      z-index: 60;
+      mix-blend-mode: multiply;
+      animation: flicker 6s infinite;
+    }
+    @keyframes flicker {
+      0%, 96%, 100% { opacity: 0.55; }
+      97% { opacity: 0.35; }
+      98% { opacity: 0.7; }
+      99% { opacity: 0.4; }
+    }
+
+    /* mouse-tracking neon glow */
+    #glow-cursor {
+      z-index: 1;
+      background: radial-gradient(
+        320px circle at var(--mx, 50%) var(--my, 50%),
+        rgba(0, 240, 255, 0.09),
+        rgba(139, 61, 255, 0.05) 40%,
+        transparent 70%
+      );
+      transition: background 0.08s linear;
+    }
+
+    /* custom cursor dot + ring */
+    #cur-dot, #cur-ring {
+      position: fixed;
+      top: 0; left: 0;
+      border-radius: 9999px;
+      pointer-events: none;
+      z-index: 90;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+    }
+    #cur-dot { width: 6px; height: 6px; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+    #cur-ring {
+      width: 34px; height: 34px;
+      border: 1px solid rgba(0,240,255,0.6);
+      transition: width 0.2s, height 0.2s, border-color 0.2s, background 0.2s;
+    }
+    #cur-ring.hot {
+      width: 52px; height: 52px;
+      border-color: var(--violet);
+      background: rgba(139,61,255,0.08);
+    }
+    @media (hover: none) { body { cursor: auto; } #cur-dot, #cur-ring, #glow-cursor { display: none; } }
+
+    /* ---------- glitch name ---------- */
+    .glitch {
+      position: relative;
+      color: #f2f2f7;
+      text-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+    }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; overflow: hidden;
+    }
+    .glitch::before { color: var(--cyan); animation: glitch-top 2.5s infinite linear alternate-reverse; }
+    .glitch::after { color: var(--violet); animation: glitch-bottom 3s infinite linear alternate-reverse; }
+    @keyframes glitch-top {
+      0%, 92%, 100% { transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+      93% { transform: translate(-3px, -2px); clip-path: inset(0 0 65% 0); }
+      95% { transform: translate(3px, 1px); clip-path: inset(20% 0 40% 0); }
+      97% { transform: translate(-2px, 2px); clip-path: inset(60% 0 5% 0); }
+    }
+    @keyframes glitch-bottom {
+      0%, 90%, 100% { transform: translate(0, 0); clip-path: inset(0 0 0 0); }
+      91% { transform: translate(3px, 2px); clip-path: inset(70% 0 0 0); }
+      94% { transform: translate(-3px, -1px); clip-path: inset(30% 0 30% 0); }
+      96% { transform: translate(2px, -2px); clip-path: inset(10% 0 60% 0); }
+    }
+
+    /* blinking cursor */
+    .cursor {
+      display: inline-block; width: 10px; height: 1.1em; margin-left: 2px;
+      background: var(--cyan); vertical-align: text-bottom;
+      animation: blink 1.05s steps(1) infinite; box-shadow: 0 0 8px var(--cyan);
+    }
+    @keyframes blink { 0%,50%{opacity:1;} 50.01%,100%{opacity:0;} }
+
+    /* section heading underline sweep */
+    .sec-title { position: relative; display: inline-block; }
+    .sec-title::after {
+      content: ""; position: absolute; left: 0; bottom: -8px; height: 2px; width: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--violet), transparent);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.7s ease;
+    }
+    .reveal.in .sec-title::after { transform: scaleX(1); }
+
+    /* ---------- neon project cards ---------- */
+    .neon-card {
+      position: relative;
+      border: 1px solid rgba(139, 61, 255, 0.22);
+      transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.15s ease;
+      transform-style: preserve-3d;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .neon-card::before { /* scanning light sweep */
+      content: ""; position: absolute; inset: 0; z-index: -1;
+      background: linear-gradient(115deg, transparent 30%, rgba(0,240,255,0.12) 50%, transparent 70%);
+      transform: translateX(-120%);
+      transition: transform 0.7s ease;
+    }
+    .neon-card:hover::before { transform: translateX(120%); }
+    .neon-card:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 26px rgba(0, 240, 255, 0.35), inset 0 0 22px rgba(139, 61, 255, 0.14);
+    }
+    /* animated corner brackets */
+    .corner {
+      position: absolute; width: 16px; height: 16px; border-color: var(--cyan);
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .neon-card:hover .corner { opacity: 1; }
+    .corner.tl { top: 10px; left: 10px; border-top: 2px solid; border-left: 2px solid; }
+    .corner.tr { top: 10px; right: 10px; border-top: 2px solid; border-right: 2px solid; }
+    .corner.bl { bottom: 10px; left: 10px; border-bottom: 2px solid; border-left: 2px solid; }
+    .corner.br { bottom: 10px; right: 10px; border-bottom: 2px solid; border-right: 2px solid; }
+
+    .tool-chip {
+      position: relative;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, transform 0.3s ease;
+    }
+    .tool-chip:hover {
+      border-color: var(--cyan); color: var(--cyan);
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3); transform: translateY(-3px);
+    }
+
+    /* scroll reveal */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* boot loader */
+    #boot {
+      position: fixed; inset: 0; z-index: 100; background: var(--base);
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.6s ease; cursor: none;
+    }
+    #boot.done { opacity: 0; pointer-events: none; }
+    #boot .term { width: min(90vw, 520px); font-family: "JetBrains Mono", monospace; font-size: 13px; }
+    .bar-track { height: 4px; background: rgba(139,61,255,0.2); border-radius: 4px; overflow: hidden; margin-top: 14px; }
+    .bar-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--violet), var(--cyan)); box-shadow: 0 0 12px var(--cyan); }
+
+    /* ---------- 3D Evolution Character Engine ---------- */
+    .core-stage {
+      perspective: 600px;
+      width: 130px;
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: floatCore 4s ease-in-out infinite;
+    }
+    @keyframes floatCore {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(2deg); }
+    }
+    .core-hologram {
+      width: 60px; height: 60px;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: rotateCore 12s infinite linear;
+    }
+    @keyframes rotateCore {
+      from { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+      to { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+    }
+    .core-facet {
+      position: absolute; width: 60px; height: 60px;
+      border: 1.5px solid var(--cyan);
+      background: rgba(0, 240, 255, 0.03);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.25), inset 0 0 10px rgba(0, 240, 255, 0.1);
+      backface-visibility: visible;
+    }
+    .facet-f  { transform: translateZ(30px); }
+    .facet-b  { transform: rotateY(180deg) translateZ(30px); border-color: var(--violet); box-shadow: 0 0 15px rgba(139,61,255,0.25); }
+    .facet-l  { transform: rotateY(-90deg) translateZ(30px); }
+    .facet-r  { transform: rotateY(90deg) translateZ(30px); border-color: var(--violet); box-shadow: 0 0 15px rgba(139,61,255,0.25); }
+    .facet-t  { transform: rotateX(90deg) translateZ(30px); }
+    .facet-bt { transform: rotateX(-90deg) translateZ(30px); }
+
+    .orbit-ring {
+      position: absolute; border: 1px dashed rgba(139, 61, 255, 0.45);
+      border-radius: 9999px; pointer-events: none;
+    }
+    .orbit-1 { width: 110px; height: 110px; animation: spinOrbit1 7s infinite linear; transform: rotateX(65deg); }
+    .orbit-2 { width: 125px; height: 125px; animation: spinOrbit2 5s infinite linear; transform: rotateY(70deg); border-color: rgba(0, 240, 255, 0.4); }
+    
+    @keyframes spinOrbit1 { from { transform: rotateX(65deg) rotateZ(0deg); } to { transform: rotateX(65deg) rotateZ(360deg); } }
+    @keyframes spinOrbit2 { from { transform: rotateY(70deg) rotateZ(0deg); } to { transform: rotateY(70deg) rotateZ(-360deg); } }
+
+    ::selection { background: rgba(0, 240, 255, 0.3); color: #fff; }
+    .badge-pulse { animation: badge-pulse 2.4s ease-in-out infinite; }
+    @keyframes badge-pulse { 0%,100%{ box-shadow: 0 0 0 rgba(0,240,255,0);} 50%{ box-shadow: 0 0 14px rgba(0,240,255,0.5);} }
+
+    a, button, .neon-card, .tool-chip { cursor: none; }
+  </style>
+</head>
+<body class="font-sans text-slate-300 antialiased">
+
+  <!-- backdrops -->
+  <canvas id="matrix"></canvas>
+  <div id="grid-floor"></div>
+  <div id="glow-cursor"></div>
+  <div id="vignette"></div>
+  <div id="scanlines"></div>
+  <div id="cur-ring"></div>
+  <div id="cur-dot"></div>
+
+  <!-- boot loader -->
+  <div id="boot">
+    <div class="term">
+      <p class="text-cyan-400">hashem@portfolio:~$ ./boot.sh</p>
+      <div id="boot-log" class="mt-2 text-slate-400 space-y-1"></div>
+      <div class="bar-track"><div id="bar" class="bar-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-[#0d0d11]/70 border-b border-violet-500/10">
+    <nav class="max-w-5xl mx-auto flex items-center justify-between px-5 py-4">
+      <a href="#top" class="font-mono font-bold text-slate-100 tracking-tight">
+        <span class="text-cyan-400">~/</span>hashem
+      </a>
+      <ul class="hidden sm:flex items-center gap-6 font-mono text-sm">
+        <li><a href="#overview" class="text-slate-400 hover:text-cyan-400 transition">overview</a></li>
+        <li><a href="#tools" class="text-slate-400 hover:text-cyan-400 transition">tools</a></li>
+        <li><a href="#projects" class="text-slate-400 hover:text-cyan-400 transition">projects</a></li>
+      </ul>
+      <span class="font-mono text-xs text-violet-400 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 badge-pulse"></span>online
+      </span>
+    </nav>
+  </header>
+
+  <main id="top" class="relative z-10 max-w-5xl mx-auto px-5">
+
+    <!-- Hero -->
+    <section class="py-24 sm:py-32 relative">
+      <div class="reveal">
+        <p class="font-mono text-cyan-400 text-sm mb-4 flex items-center gap-2">
+          <span class="inline-block w-8 h-px bg-cyan-400"></span>// initializing profile...
+        </p>
+        <h1 class="font-mono font-extrabold text-6xl sm:text-8xl tracking-tight glitch" data-text="Hashem">Hashem</h1>
+        <p class="font-mono text-lg sm:text-xl mt-6 text-slate-400">
+          <span class="text-violet-400">&gt;</span> <span id="type"></span><span class="cursor"></span>
+        </p>
+        <div class="flex flex-wrap gap-3 mt-8 font-mono text-xs">
+          <span class="px-3 py-1.5 rounded border border-cyan-400/30 text-cyan-400 bg-cyan-400/5">STATUS: near graduation</span>
+          <span class="px-3 py-1.5 rounded border border-violet-500/30 text-violet-300 bg-violet-500/5">FOCUS: software + hardware</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview -->
+    <section id="overview" class="py-14 border-t border-violet-500/10 scroll-mt-20 reveal">
+      <h2 class="font-mono font-bold text-2xl text-slate-100 mb-8">
+        <span class="text-cyan-400">01.</span> <span class="sec-title">Overview</span>
+      </h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <p class="md:col-span-2 text-slate-400 leading-relaxed text-pretty">
+          A Computer Science student nearing graduation, working across software engineering and
+          hardware testing. Comfortable moving between application development and low-level embedded
+          work — from building full-stack platforms to validating microcontroller-based systems.
+          Focused on writing maintainable code, understanding systems end to end, and shipping projects
+          that are actually used.
+        </p>
+        <div class="font-mono text-xs space-y-3 border-l border-violet-500/20 pl-5">
+          <div><span class="text-slate-500">domain</span><br><span class="text-cyan-400">software_engineering</span></div>
+          <div><span class="text-slate-500">domain</span><br><span class="text-cyan-400">hardware_testing</span></div>
+          <div><span class="text-slate-500">mindset</span><br><span class="text-violet-300">systems, end to end</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Tools -->
+    <section id="tools" class="py-14 border-t border-violet-500/10 scroll-mt-20 reveal">
+      <h2 class="font-mono font-bold text-2xl text-slate-100 mb-10">
+        <span class="text-cyan-400">02.</span> <span class="sec-title">Technical Tools</span>
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <div class="tool-chip font-mono text-sm bg-[#12121a] border border-violet-500/20 rounded-lg px-4 py-6 text-center">Flutter<span class="block text-[10px] text-slate-500 mt-1">// mobile</span></div>
+        <div class="tool-chip font-mono text-sm bg-[#12121a] border border-violet-500/20 rounded-lg px-4 py-6 text-center">React<span class="block text-[10px] text-slate-500 mt-1">// web</span></div>
+        <div class="tool-chip font-mono text-sm bg-[#12121a] border border-violet-500/20 rounded-lg px-4 py-6 text-center">Python<span class="block text-[10px] text-slate-500 mt-1">// scripting</span></div>
+        <div class="tool-chip font-mono text-sm bg-[#12121a] border border-violet-500/20 rounded-lg px-4 py-6 text-center">C++<span class="block text-[10px] text-slate-500 mt-1">// systems</span></div>
+        <div class="tool-chip font-mono text-sm bg-[#12121a] border border-violet-500/20 rounded-lg px-4 py-6 text-center">Supabase<span class="block text-[10px] text-slate-500 mt-1">// backend</span></div>
+        <div class="tool-chip font-mono text-sm bg-[#12121a] border border-violet-500/20 rounded-lg px-4 py-6 text-center">Vercel<span class="block text-[10px] text-slate-500 mt-1">// deploy</span></div>
+        <div class="tool-chip font-mono text-sm bg-[#12121a] border border-violet-500/20 rounded-lg px-4 py-6 text-center">ESP32<span class="block text-[10px] text-slate-500 mt-1">// embedded</span></div>
+        <div class="tool-chip font-mono text-sm bg-[#12121a] border border-cyan-400/20 rounded-lg px-4 py-6 text-center text-cyan-400/70">+ more<span class="block text-[10px] text-slate-500 mt-1">// growing</span></div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="py-14 border-t border-violet-500/10 scroll-mt-20 reveal">
+      <h2 class="font-mono font-bold text-2xl text-slate-100 mb-10">
+        <span class="text-cyan-400">03.</span> <span class="sec-title">Projects</span>
+      </h2>
+      <div class="grid gap-6">
+
+        <article class="neon-card tilt bg-[#12121a] rounded-xl p-6 sm:p-8">
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-mono font-bold text-xl text-slate-100">Al-Hulul Workforce Platform</h3>
+            <span class="font-mono text-xs text-violet-400 whitespace-nowrap">HR · web</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed mt-4 text-pretty">
+            A digital HR platform for managing the seasonal Hajj workforce. Includes a biometric
+            attendance system combining face recognition with GPS geofencing to verify on-site presence.
+          </p>
+          <div class="flex flex-wrap gap-2 mt-5 font-mono text-xs">
+            <span class="px-3 py-1 rounded-full border border-cyan-400/30 text-cyan-400">React</span>
+            <span class="px-3 py-1 rounded-full border border-cyan-400/30 text-cyan-400">Supabase</span>
+            <span class="px-3 py-1 rounded-full border border-cyan-400/30 text-cyan-400">Vercel</span>
+            <span class="px-3 py-1 rounded-full border border-violet-500/30 text-violet-300">Face Recognition</span>
+            <span class="px-3 py-1 rounded-full border border-violet-500/30 text-violet-300">GPS Geofencing</span>
+          </div>
+        </article>
+
+        <article class="neon-card tilt bg-[#12121a] rounded-xl p-6 sm:p-8">
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-mono font-bold text-xl text-slate-100">Academic &amp; Student Tracking System</h3>
+            <span class="font-mono text-xs text-violet-400 whitespace-nowrap">dashboard · mobile</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed mt-4 text-pretty">
+            A university graduation dashboard for tracking academic progress and student milestones,
+            built with Flutter for a cross-platform experience.
+          </p>
+          <div class="flex flex-wrap gap-2 mt-5 font-mono text-xs">
+            <span class="px-3 py-1 rounded-full border border-cyan-400/30 text-cyan-400">Flutter</span>
+          </div>
+        </article>
+
+        <article class="neon-card tilt bg-[#12121a] rounded-xl p-6 sm:p-8">
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="font-mono font-bold text-xl text-slate-100">Small Satellite Subsystem Design</h3>
+            <span class="font-mono text-xs text-violet-400 whitespace-nowrap">hardware · space</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed mt-4 text-pretty">
+            A collaborative engineering project developed under a space academy program, focused on
+            designing and testing a subsystem for a small satellite.
+          </p>
+          <div class="flex flex-wrap gap-2 mt-5 font-mono text-xs">
+            <span class="px-3 py-1 rounded-full border border-cyan-400/30 text-cyan-400">Systems Design</span>
+            <span class="px-3 py-1 rounded-full border border-cyan-400/30 text-cyan-400">Collaboration</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ---------- NEW UPDATE: [04] Evolution Engine ---------- -->
+    <section id="evolution" class="py-14 border-t border-violet-500/10 reveal">
+      <h2 class="font-mono font-bold text-2xl text-slate-100 mb-10">
+        <span class="text-cyan-400">04.</span> <span class="sec-title">Evolution Engine</span>
+      </h2>
+      <div class="bg-[#12121a] border border-cyan-400/10 rounded-xl p-6 sm:p-8 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
+        
+        <!-- 3D Neon Sprite Element Representing Growth -->
+        <div class="relative flex items-center justify-center w-40 h-40 shrink-0">
+          <div class="orbit-ring orbit-1"></div>
+          <div class="orbit-ring orbit-2"></div>
+          <div class="core-stage">
+            <div class="core-hologram">
+              <div class="core-facet facet-f"></div>
+              <div class="core-facet facet-b"></div>
+              <div class="core-facet facet-l"></div>
+              <div class="core-facet facet-r"></div>
+              <div class="core-facet facet-t"></div>
+              <div class="core-facet facet-bt"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Diagnostics Log Data -->
+        <div class="w-full font-mono text-xs space-y-2">
+          <div class="text-cyan-400 flex items-center gap-2 mb-3">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            <span>SYSTEM_MODE: CONTINUOUS_ITERATION</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed">
+            Architectures are built to scale, not stand static. The active frame undergoes persistent runtime upgrades — refactoring operational structures, stress-testing communication components, and expanding boundaries through applied computer science.
+          </p>
+          <div class="bg-black/40 border border-violet-500/20 rounded p-4 text-slate-500 space-y-1 mt-3">
+            <div id="evo-log-1">&gt; readying core expansion loops...</div>
+            <div id="evo-log-2" class="text-violet-400/70">&gt; monitoring internal subsystem states...</div>
+            <div class="text-cyan-400/80">&gt; evolution_coefficient: <span class="text-slate-300 font-bold animate-pulse">RUNNING</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-14 border-t border-violet-500/10 text-center reveal">
+      <p class="font-mono text-sm text-slate-500">
+        <span class="text-cyan-400">$</span> echo "built by Hashem" <span class="text-violet-400">// EOF</span>
+      </p>
+    </footer>
+
+  </main>
+
+  <script>
+    /* ---------- matrix rain ---------- */
+    (function () {
+      const c = document.getElementById("matrix");
+      const ctx = c.getContext("2d");
+      let cols, drops, fontSize = 14;
+      const chars = "01アイウエオカ<>[]{}#$%&*+=/ハシムHASHEM".split("");
+      function resize() {
+        c.width = window.innerWidth; c.height = window.innerHeight;
+        cols = Math.floor(c.width / fontSize);
+        drops = Array(cols).fill(1).map(() => Math.random() * -100);
+      }
+      resize();
+      window.addEventListener("resize", resize);
+      function draw() {
+        ctx.fillStyle = "rgba(13,13,17,0.08)";
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.font = fontSize + "px monospace";
+        for (let i = 0; i < cols; i++) {
+          const txt = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillStyle = Math.random() > 0.94 ? "#8b3dff" : "#00f0ff";
+          ctx.fillText(txt, i * fontSize, drops[i] * fontSize);
+          if (drops[i] * fontSize > c.height && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        }
+      }
+      setInterval(draw, 55);
+    })();
+
+    /* ---------- custom cursor + glow ---------- */
+    (function () {
+      const dot = document.getElementById("cur-dot");
+      const ring = document.getElementById("cur-ring");
+      const glow = document.getElementById("glow-cursor");
+      let rx = 0, ry = 0, tx = 0, ty = 0;
+      window.addEventListener("mousemove", (e) => {
+        tx = e.clientX; ty = e.clientY;
+        dot.style.left = tx + "px"; dot.style.top = ty + "px";
+        glow.style.setProperty("--mx", tx + "px");
+        glow.style.setProperty("--my", ty + "px");
+      });
+      function loop() {
+        rx += (tx - rx) * 0.18; ry += (ty - ry) * 0.18;
+        ring.style.left = rx + "px"; ring.style.top = ry + "px";
+        requestAnimationFrame(loop);
+      }
+      loop();
+      document.querySelectorAll("a, .neon-card, .tool-chip").forEach((el) => {
+        el.addEventListener("mouseenter", () => ring.classList.add("hot"));
+        el.addEventListener("mouseleave", () => ring.classList.remove("hot"));
+      });
+    })();
+
+    /* ---------- 3D tilt on cards ---------- */
+    (function () {
+      document.querySelectorAll(".tilt").forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const r = card.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width - 0.5;
+          const py = (e.clientY - r.top) / r.height - 0.5;
+          card.style.transform = `perspective(800px) rotateX(${-py * 5}deg) rotateY(${px * 5}deg) translateY(-4px)`;
+        });
+        card.addEventListener("mouseleave", () => { card.style.transform = ""; });
+      });
+    })();
+
+    /* ---------- typing subtitle ---------- */
+    (function () {
+      const el = document.getElementById("type");
+      const full = "Computer Science student · software engineering & hardware testing";
+      let i = 0;
+      function type() {
+        if (i <= full.length) { el.textContent = full.slice(0, i); i++; setTimeout(type, 32); }
+      }
+      setTimeout(type, 200);
+    })();
+
+    /* ---------- scroll reveal ---------- */
+    (function () {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+      }, { threshold: 0.12 });
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    })();
+
+    /* ---------- boot loader ---------- */
+    (function () {
+      const boot = document.getElementById("boot");
+      const log = document.getElementById("boot-log");
+      const bar = document.getElementById("bar");
+      const lines = [
+        "loading kernel modules ......... ok",
+        "mounting /projects ............. ok",
+        "linking neon subsystems ........ ok",
+        "calibrating glitch matrix ...... ok",
+        "auth: hashem ................... ok",
+      ];
+      let i = 0;
+      function step() {
+        if (i < lines.length) {
+          const p = document.createElement("p");
+          p.innerHTML = '<span class="text-violet-400">[' + String(i + 1).padStart(2, "0") + ']</span> ' + lines[i];
+          log.appendChild(p);
+          bar.style.width = ((i + 1) / lines.length) * 100 + "%";
+          i++;
+          setTimeout(step, 260);
+        } else {
+          setTimeout(() => boot.classList.add("done"), 400);
+        }
+      }
+      setTimeout(step, 250);
+    })();
+
+    /* ---------- LIVE ENGINE LOG ROTATOR ---------- */
+    (function () {
+      const log1 = document.getElementById("evo-log-1");
+      const log2 = document.getElementById("evo-log-2");
+      
+      const pool1 = [
+        "&gt; compiling skill loops...",
+        "&gt; integrating system vectors...",
+        "&gt; scanning peripheral pipelines...",
+        "&gt; optimizing full stack layouts..."
+      ];
+      const pool2 = [
+        "&gt; status: expanding codebase parameters",
+        "&gt; status: resolving execution constraints",
+        "&gt; status: learning loop stable",
+        "&gt; status: hardware layers verified"
+      ];
+
+      setInterval(() => {
+        log1.innerHTML = pool1[Math.floor(Math.random() * pool1.length)];
+        log2.innerHTML = pool2[Math.floor(Math.random() * pool2.length)];
+      }, 3500);
+    })();
+  </script>
+</body>
+</html>

@@ -2,6 +2,8 @@
 
 Interactive cyberpunk 3D portfolio + ATS-friendly CV for **Hashem Zaid Aidaroos Alhamed**.
 
+**Live:** https://hashem-portfolio-six.vercel.app · **CV:** https://hashem-portfolio-six.vercel.app/cv
+
 ## Live Sections
 
 | Route | Description |
