@@ -4,6 +4,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Grid, Float, Stars } from "@react-three/drei";
 import { useRef, useMemo } from "react";
 import * as THREE from "three";
+import WorkstationScene from "./WorkstationScene";
 
 function CyberCore({ scroll }: { scroll: number }) {
   const ref = useRef<THREE.Mesh>(null);
@@ -17,7 +18,8 @@ function CyberCore({ scroll }: { scroll: number }) {
 
   return (
     <Float speed={1.2} rotationIntensity={0.4} floatIntensity={0.6}>
-      <mesh ref={ref}>
+      <group position={[-2.2, 0, 0]}>
+        <mesh ref={ref}>
         <icosahedronGeometry args={[1.2, 1]} />
         <meshStandardMaterial
           color="#00f0ff"
@@ -28,6 +30,7 @@ function CyberCore({ scroll }: { scroll: number }) {
           opacity={0.85}
         />
       </mesh>
+      </group>
     </Float>
   );
 }
@@ -67,6 +70,7 @@ function ScrollScene({ scroll }: { scroll: number }) {
   return (
     <group ref={groupRef}>
       <CyberCore scroll={scroll} />
+      <WorkstationScene scroll={scroll} />
       <ParticleField />
       <Grid
         args={[30, 30]}
@@ -88,7 +92,7 @@ function ScrollScene({ scroll }: { scroll: number }) {
 export default function Scene3D({ scroll }: { scroll: number }) {
   return (
     <Canvas
-      camera={{ position: [0, 1.5, 6], fov: 55 }}
+      camera={{ position: [0.4, 1.35, 6.2], fov: 52 }}
       gl={{ antialias: true, alpha: true }}
       style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}
     >
