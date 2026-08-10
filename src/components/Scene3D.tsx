@@ -92,7 +92,7 @@ function ScrollScene({ scroll }: { scroll: number }) {
 export default function Scene3D({ scroll }: { scroll: number }) {
   return (
     <Canvas
-      camera={{ position: [0.4, 1.35, 6.2], fov: 52 }}
+      camera={{ position: [0.6, 1.25, 5.5], fov: 50 }}
       gl={{ antialias: true, alpha: true }}
       style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}
     >
