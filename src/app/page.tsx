@@ -8,14 +8,11 @@ import About from "@/components/About";
 import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
-import WorkStateBadge from "@/components/WorkStateBadge";
-import { useWorkStateFromScroll } from "@/hooks/useWorkStateFromScroll";
 
 const Scene3D = dynamic(() => import("@/components/Scene3D"), { ssr: false });
 
 export default function Home() {
   const [scroll, setScroll] = useState(0);
-  const { workState, activeSection } = useWorkStateFromScroll();
 
   useEffect(() => {
     const onScroll = () => setScroll(window.scrollY);
@@ -26,8 +23,7 @@ export default function Home() {
 
   return (
     <>
-      <Scene3D scroll={scroll} workState={workState} />
-      <WorkStateBadge workState={workState} activeSection={activeSection} />
+      <Scene3D scroll={scroll} />
       <Nav scroll={scroll} />
       <main className="relative z-10">
         <Hero />

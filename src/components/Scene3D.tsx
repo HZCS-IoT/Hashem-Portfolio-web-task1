@@ -4,8 +4,6 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Grid, Float, Stars } from "@react-three/drei";
 import { useRef, useMemo } from "react";
 import * as THREE from "three";
-import WorkstationScene from "./WorkstationScene";
-import type { WorkState } from "@/data/workStates";
 
 function CyberCore({ scroll }: { scroll: number }) {
   const ref = useRef<THREE.Mesh>(null);
@@ -56,7 +54,7 @@ function ParticleField() {
   );
 }
 
-function ScrollScene({ scroll, workState }: { scroll: number; workState: WorkState }) {
+function ScrollScene({ scroll }: { scroll: number }) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
@@ -69,7 +67,6 @@ function ScrollScene({ scroll, workState }: { scroll: number; workState: WorkSta
   return (
     <group ref={groupRef}>
       <CyberCore scroll={scroll} />
-      <WorkstationScene scroll={scroll} workState={workState} />
       <ParticleField />
       <Grid
         args={[30, 30]}
@@ -88,10 +85,10 @@ function ScrollScene({ scroll, workState }: { scroll: number; workState: WorkSta
   );
 }
 
-export default function Scene3D({ scroll, workState }: { scroll: number; workState: WorkState }) {
+export default function Scene3D({ scroll }: { scroll: number }) {
   return (
     <Canvas
-      camera={{ position: [0.6, 1.25, 5.5], fov: 50 }}
+      camera={{ position: [0, 1.5, 6], fov: 55 }}
       gl={{ antialias: true, alpha: true }}
       style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}
     >
@@ -101,7 +98,7 @@ export default function Scene3D({ scroll, workState }: { scroll: number; workSta
       <pointLight position={[4, 6, 4]} intensity={1.2} color="#00f0ff" />
       <pointLight position={[-4, 2, -2]} intensity={0.6} color="#ff006e" />
 
-      <ScrollScene scroll={scroll} workState={workState} />
+      <ScrollScene scroll={scroll} />
 
       <Stars radius={40} depth={30} count={800} factor={3} saturation={0} fade speed={0.6} />
     </Canvas>
