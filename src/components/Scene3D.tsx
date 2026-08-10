@@ -54,7 +54,7 @@ function ParticleField() {
   );
 }
 
-export default function Scene3D({ scroll }: { scroll: number }) {
+function ScrollScene({ scroll }: { scroll: number }) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame(() => {
@@ -64,6 +64,28 @@ export default function Scene3D({ scroll }: { scroll: number }) {
     }
   });
 
+  return (
+    <group ref={groupRef}>
+      <CyberCore scroll={scroll} />
+      <ParticleField />
+      <Grid
+        args={[30, 30]}
+        cellSize={0.6}
+        cellThickness={0.4}
+        sectionSize={3}
+        sectionThickness={0.8}
+        fadeDistance={18}
+        fadeStrength={1.2}
+        position={[0, -2.2, 0]}
+        rotation={[0, 0, 0]}
+        cellColor="#0d3340"
+        sectionColor="#00f0ff"
+      />
+    </group>
+  );
+}
+
+export default function Scene3D({ scroll }: { scroll: number }) {
   return (
     <Canvas
       camera={{ position: [0, 1.5, 6], fov: 55 }}
@@ -76,23 +98,7 @@ export default function Scene3D({ scroll }: { scroll: number }) {
       <pointLight position={[4, 6, 4]} intensity={1.2} color="#00f0ff" />
       <pointLight position={[-4, 2, -2]} intensity={0.6} color="#ff006e" />
 
-      <group ref={groupRef}>
-        <CyberCore scroll={scroll} />
-        <ParticleField />
-        <Grid
-          args={[30, 30]}
-          cellSize={0.6}
-          cellThickness={0.4}
-          sectionSize={3}
-          sectionThickness={0.8}
-          fadeDistance={18}
-          fadeStrength={1.2}
-          position={[0, -2.2, 0]}
-          rotation={[0, 0, 0]}
-          cellColor="#0d3340"
-          sectionColor="#00f0ff"
-        />
-      </group>
+      <ScrollScene scroll={scroll} />
 
       <Stars radius={40} depth={30} count={800} factor={3} saturation={0} fade speed={0.6} />
     </Canvas>
