@@ -2,6 +2,7 @@
 
 import { projects } from "@/data/projects";
 import { SectionLabel } from "./About";
+import ProjectMediaBlock from "./ProjectMedia";
 import { motion } from "framer-motion";
 
 export default function Projects() {
@@ -45,7 +46,7 @@ function ProjectCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ delay: index * 0.06, duration: 0.45 }}
-      className={`glass-card p-6 flex flex-col ${large ? "md:min-h-[320px]" : ""} group hover:border-cyan-400/40 transition-colors`}
+      className={`glass-card p-6 flex flex-col ${large ? "md:min-h-[320px]" : ""} ${project.media?.videos.some((v) => v.primary) && large ? "md:col-span-2" : ""} group hover:border-cyan-400/40 transition-colors`}
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
@@ -61,7 +62,9 @@ function ProjectCard({
 
       <p className="text-slate-400 text-sm leading-relaxed mb-4">{project.description}</p>
 
-      <ul className="text-sm text-slate-500 space-y-1.5 mb-5 flex-1">
+      {project.media && <ProjectMediaBlock media={project.media} />}
+
+      <ul className="text-sm text-slate-500 space-y-1.5 mb-5 flex-1 mt-4">
         {project.highlights.slice(0, large ? 4 : 2).map((h) => (
           <li key={h} className="flex gap-2">
             <span className="text-cyan-500 shrink-0">▸</span>

@@ -1,3 +1,20 @@
+export type ProjectVideo = {
+  id: string;
+  title: string;
+  primary?: boolean;
+};
+
+export type ProjectImage = {
+  src: string;
+  alt: string;
+};
+
+export type ProjectMedia = {
+  images: ProjectImage[];
+  videos: ProjectVideo[];
+  docLink?: string;
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -8,6 +25,7 @@ export type Project = {
   github?: string;
   featured: boolean;
   category: "fullstack" | "mobile" | "iot" | "ai" | "web";
+  media?: ProjectMedia;
 };
 
 export const projects: Project[] = [
@@ -60,6 +78,23 @@ export const projects: Project[] = [
     github: "https://github.com/HZCS-IoT/Mechanics-walking-robot-",
     featured: true,
     category: "iot",
+    media: {
+      images: [
+        { src: "/projects/robodog/frame_001.jpg", alt: "RoboDog BodyV2 — hardware setup" },
+        { src: "/projects/robodog/frame_002.jpg", alt: "Quadruped walking test" },
+        { src: "/projects/robodog/frame_003.jpg", alt: "ESP32 and servo wiring" },
+        { src: "/projects/robodog/frame_004.jpg", alt: "Control panel demo" },
+        { src: "/projects/robodog/det_015.jpg", alt: "RoboDog movement capture" },
+        { src: "/projects/robodog/det_020.jpg", alt: "Leg gait sequence" },
+        { src: "/projects/robodog/det_025.jpg", alt: "MQTT remote control test" },
+      ],
+      videos: [
+        { id: "XNNBhHW6kjc", title: "Walking demo (3 gaits)", primary: true },
+        { id: "KG-kgXi6Zhg", title: "Servo leg movement" },
+        { id: "DsWuTCv1QBQ", title: "ESP32 wiring guide" },
+      ],
+      docLink: "https://github.com/HZCS-IoT/Mechanics-walking-robot-/blob/main/docs/robodog/README.md",
+    },
   },
   {
     id: "kiba",
@@ -120,6 +155,11 @@ export const projects: Project[] = [
     github: "https://github.com/HZCS-IoT/Web-ControlPanel-for-RoboDog",
     featured: false,
     category: "web",
+    media: {
+      images: [],
+      videos: [{ id: "XNNBhHW6kjc", title: "Control panel demo", primary: true }],
+      docLink: "https://github.com/HZCS-IoT/Mechanics-walking-robot-/tree/main/web/h",
+    },
   },
   {
     id: "smart-gate",
