@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #050810;
+  --cyan: #00f0ff;
+  --magenta: #ff006e;
+  --glass: rgba(8, 16, 28, 0.72);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: #e2e8f0;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.section-panel {
+  @apply relative max-w-6xl mx-auto px-6 py-24 sm:py-32;
+}
+
+.glass-card {
+  @apply rounded-xl border border-cyan-900/35 bg-[rgba(8,16,28,0.72)] backdrop-blur-sm;
+  box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.04), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-lg text-sm font-semibold;
+  @apply bg-cyan-400 text-[#050810] hover:bg-cyan-300 transition-colors;
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.25);
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-lg text-sm font-semibold;
+  @apply border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10 transition-colors;
+}
+
+.tag {
+  @apply text-[11px] font-mono px-2 py-0.5 rounded border border-slate-700/80 text-slate-400 bg-slate-900/40;
+}
+
+/* ATS CV print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .cv-page {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}
