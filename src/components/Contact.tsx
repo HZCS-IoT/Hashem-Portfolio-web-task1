@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 export default function Contact() {
   return (
     <section id="contact" className="section-panel pb-32">
-      <SectionLabel n="05" title="Contact" />
+      <SectionLabel n="06" title="Contact" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}

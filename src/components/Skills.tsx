@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 export default function Skills() {
   return (
     <section id="skills" className="section-panel">
-      <SectionLabel n="03" title="Technical Skills" />
+      <SectionLabel n="04" title="Technical Skills" />
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
         {skillGroups.map((group, i) => (
@@ -34,7 +34,7 @@ export default function Skills() {
         ))}
       </div>
 
-      <SectionLabel n="04" title="GitHub Repositories" />
+      <SectionLabel n="05" title="GitHub Repositories" />
       <div className="grid sm:grid-cols-2 gap-3">
         {githubRepos.map((repo) => (
           <a
