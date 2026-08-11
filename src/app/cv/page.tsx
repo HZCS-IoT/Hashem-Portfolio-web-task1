@@ -15,7 +15,7 @@ export default function CVPage() {
   const cvProjects = cvProjectIds
     .map((id) => projects.find((p) => p.id === id))
     .filter(Boolean) as typeof projects;
-  const allSkills = skillGroups.map((g) => g.skills.join(", ")).join(" · ");
+  const allSkills = skillGroups.flatMap((g) => g.skills.map((s) => s.name)).join(" · ");
   const topCerts = certificates.slice(0, 6);
   const moreCerts = certificates.length - topCerts.length;
 
