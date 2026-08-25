@@ -10,6 +10,7 @@ import {
 
 export default function SkillIcon({ meta }: { meta: SkillMeta }) {
   const [hover, setHover] = useState(false);
+  const [iconFailed, setIconFailed] = useState(false);
   const projects = getProjectsForSkill(meta.name);
   const iconUrl = skillIconUrl(meta);
 
@@ -29,20 +30,29 @@ export default function SkillIcon({ meta }: { meta: SkillMeta }) {
         className={`skill-orb group ${hover ? "skill-orb-active" : ""}`}
       >
         <span className="skill-orb-glow" aria-hidden />
-        {iconUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={iconUrl}
-            alt=""
-            className="w-7 h-7 object-contain relative z-10 drop-shadow-sm"
-            loading="lazy"
+        {iconUrl && !iconFailed ? (
+          <span
+            role="img"
+            aria-label={meta.name}
+            className="w-7 h-7 relative z-10 drop-shadow-sm bg-current"
+            style={{
+              color: `#${meta.color ?? "00F0FF"}`,
+              WebkitMaskImage: `url("${iconUrl}")`,
+              maskImage: `url("${iconUrl}")`,
+              WebkitMaskPosition: "center",
+              maskPosition: "center",
+              WebkitMaskRepeat: "no-repeat",
+              maskRepeat: "no-repeat",
+              WebkitMaskSize: "contain",
+              maskSize: "contain",
+            }}
           />
         ) : (
           <span
             className="relative z-10 text-[10px] font-bold font-mono tracking-tight"
             style={{ color: meta.color ? `#${meta.color}` : "#00f0ff" }}
           >
-            {meta.monogram ?? meta.name.slice(0, 2).toUpperCase()}
+            {meta.monogram ?? (meta.name === "Onshape" ? meta.name : meta.name.slice(0, 2).toUpperCase())}
           </span>
         )}
         <span className="skill-orb-label">{meta.name}</span>

@@ -66,6 +66,8 @@ export const skillGroups: { category: string; skills: SkillMeta[] }[] = [
       { name: "Onshape", slug: "onshape", color: "00B4D8" },
       { name: "3D Printing", monogram: "3D", color: "00F0FF" },
       { name: "Linux", slug: "linux", color: "FCC624" },
+      { name: "Excel", slug: "microsoftexcel", color: "217346" },
+      { name: "Power BI", slug: "powerbi", color: "F2C811" },
     ],
   },
 ];
@@ -155,8 +157,7 @@ export function getProjectsForSkill(skillName: string): string[] {
 
 export function skillIconUrl(meta: SkillMeta): string | null {
   if (!meta.slug) return null;
-  const color = meta.color ?? "FFFFFF";
-  return `https://cdn.simpleicons.org/${meta.slug}/${color}`;
+  return `https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${meta.slug}.svg`;
 }
 
 /** Flat list for CV / other uses */
