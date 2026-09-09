@@ -253,26 +253,39 @@ function FloatingConnection({
   const distance = start.distanceTo(end);
   const opacity = distance < 1.5 ? 0.35 : distance < 2.5 ? 0.25 : 0.15;
 
-  return (
-    <line ref={lineRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={2}
-          array={new Float32Array([start.x, start.y, start.z, end.x, end.y, end.z])}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <lineBasicMaterial color="#00f0ff" opacity={opacity} transparent />
-    </line>
+  const geometry = useMemo(() => {
+    const geom = new THREE.BufferGeometry();
+    const positions = new Float32Array([
+      start.x, start.y, start.z,
+      end.x, end.y, end.z
+    ]);
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geom;
+  }, [start, end]);
+
+  const material = useMemo(
+    () => new THREE.LineBasicMaterial({ color: "#00f0ff", opacity, transparent: true }),
+    [opacity]
   );
+
+  return <primitive object={new THREE.Line(geometry, material)} ref={lineRef} />;
 }
 
 function BrainSphereCore() {
   const groupRef = useRef<THREE.Group>(null);
   const neurons = useMemo(() => generateNeurons(35, 2), []);
   const connections = useMemo(() => generateConnections(neurons), [neurons]);
-  
+
+  // Particles geometry
+  const particlesGeometry = useMemo(() => {
+    const geom = new THREE.BufferGeometry();
+    const positions = new Float32Array(
+      Array.from({ length: 450 }, () => (Math.random() - 0.5) * 6)
+    );
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geom;
+  }, []);
+
   useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += 0.003;
@@ -295,19 +308,7 @@ function BrainSphereCore() {
       <AnimatedSignals neurons={neurons} connections={connections} />
 
       {/* Ambient particles */}
-      <points>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={150}
-            array={
-              new Float32Array(
-                Array.from({ length: 450 }, () => (Math.random() - 0.5) * 6)
-              )
-            }
-            itemSize={3}
-          />
-        </bufferGeometry>
+      <points geometry={particlesGeometry}>
         <pointsMaterial size={0.015} color="#00f0ff" transparent opacity={0.4} />
       </points>
     </group>
